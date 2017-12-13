@@ -12,7 +12,6 @@
 */
 
 Route::get('/', function () {
-	$uer = DB::table('gd_user')->get();
-	dd($uer);
+	
     return view('welcome');
 });
