@@ -4,16 +4,18 @@
         return [
             'status'=>$success,
             'message'=>$msg,
-            'data'=>$data,
-            //'code'=>$code
+            'code'=>$code,
+            'data'=>$data
         ];
     }
 
-    function responseJSON_NOT_DATA($success=true,$msg='SUCCESS',$code=200)
+    function responseJSON_EMPTY_OBJECT($success=true,$msg='SUCCESS',$code=200)
     {
         return [
             'status'=>$success,
-            'message'=>$msg
+            'message'=>$msg,
+            'code'=>$code,
+            'data'=>new ArrayObject()
         ];
     }
 
@@ -623,5 +625,15 @@ function getTokenForgotPassword($token='')
         'success'=>false,
         'table'=>'',
         'email'=>''
+    ];
+}
+
+function ImageObject($width,$height,$short_link,$full_link)
+{
+    return [
+        'width'=>$width,
+        'height'=>$height,
+        'short_link'=>$short_link,
+        'full_link'=>$full_link
     ];
 }

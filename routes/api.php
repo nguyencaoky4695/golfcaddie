@@ -22,3 +22,9 @@ $lang = InitLanguage(2);
 Route::post("$lang/auth/register", 'Api\CaddieController@register');
 Route::post("$lang/auth/login", 'Api\CaddieController@login');
 Route::post("$lang/auth/logout", 'Api\CaddieController@logout');
+
+Route::resource("$lang/tournament",'Api\TournamentController');
+
+Route::group(['prefix'=>$lang, 'middleware' => 'jwt.auth'], function () {
+
+});
