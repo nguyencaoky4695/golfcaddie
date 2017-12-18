@@ -52,7 +52,6 @@ class LoginController extends Controller
         \Config::set('auth.providers.users.model', GdUser::class);
         \Config::set('jwt.user', GdUser::class);
         $this->caddie = new GdUser();
-
         $this->middleware(function ($request,$next){
             $tk = session('token_auth');
             if(!empty($tk))
@@ -68,18 +67,18 @@ class LoginController extends Controller
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
 
-                return responseJSON_NOT_DATA(false, 'INVALID EMAIL OR PASSWORD', ErrorCode::$InvalidAccount);
+                return responseJSON_EMPTY_OBJECT(false, 'INVALID EMAIL OR PASSWORD', ErrorCode::$InvalidAccount);
             }
 
         } catch (JWTAuthException $e) {
-            return responseJSON_NOT_DATA(false, 'Khong tao duoc token, loi khong xac dinh', ErrorCode::$ServerError);
+            return responseJSON_EMPTY_OBJECT(false, 'Khong tao duoc token, loi khong xac dinh', ErrorCode::$ServerError);
         }
         $caddie = JWTAuth::toUser($token);
 
         $device_token = $request->get('device_token');
 
         if (!$device_token)
-            return responseJSON_NOT_DATA(false, "Thieu device_token de push");
+            return responseJSON_EMPTY_OBJECT(false, "Thieu device_token de push",ErrorCode::$RequiredDeviceToken);
 
         try {
             
@@ -88,7 +87,7 @@ class LoginController extends Controller
             $caddie->device_token =  $device_token;
             $caddie->save();
         } catch (Exception $ex) {
-            return responseJSON_NOT_DATA(false, "device_token khong hop le");
+            return responseJSON_EMPTY_OBJECT(false, "device_token khong hop le",ErrorCode::$RequiredDeviceToken);
         }
 
          $result = $caddie->responseUser();
