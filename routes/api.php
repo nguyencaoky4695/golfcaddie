@@ -19,6 +19,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 $lang = InitLanguage(2);
 
-Route::post("$lang/auth/register", 'Api\CaddieController@register');
-Route::post("$lang/auth/login", 'Api\CaddieController@login');
-Route::post("$lang/auth/logout", 'Api\CaddieController@logout');
+Route::post("$lang/register", 'Auth\LoginController@register');
+Route::post("$lang/login", 'Auth\LoginController@login');
+Route::post("$lang/logout", 'Auth\LoginController@logout');
+
+
+Route::group(['prefix'=>$lang, 'middleware' => 'jwt.auth'], function () {
+
+	Route::post("change-password", 'Auth\LoginController@ChangePassword');
+
+});
