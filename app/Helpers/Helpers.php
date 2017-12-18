@@ -5,7 +5,7 @@
             'status'=>$success,
             'message'=>$msg,
             'data'=>$data,
-            //'code'=>$code
+            'code'=>$code
         ];
     }
 
@@ -13,7 +13,8 @@
     {
         return [
             'status'=>$success,
-            'message'=>$msg
+            'message'=>$msg,
+            'code'=>$code
         ];
     }
 
