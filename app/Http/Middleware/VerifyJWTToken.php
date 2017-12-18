@@ -6,24 +6,29 @@ use Closure;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-
 class VerifyJWTToken
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
     public function handle($request, Closure $next)
     {
-        try{
-            $token = $request->header(config('constants.token_name'));
-            JWTAuth::toUser($token);
-            session(['token_auth'=>$token]);
 
-            $table = $request->header('role');
-            if(!empty($table)){
-                if(!checkTokenHelpers($table,$token))
-                    return response(responseJSON_NOT_DATA(false,"UNAUTHORIZED"),401);
-            }
-        }catch (JWTException $e) {
-            return response(responseJSON_NOT_DATA(false,"UNAUTHORIZED"));
-        }
-        return $next($request);
+        try {
+           $user = JWTAuth::toUser($request->header('token'));
+       }catch (JWTException $e) {
+           if($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
+               return response()->json(['status'=>false,'message'=>'UNAUTHORIZED','data'=>[]], $e->getStatusCode());
+           }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
+               return response()->json(['status'=>false,'message'=>'UNAUTHORIZED','data'=>[]], $e->getStatusCode());
+           }else{
+               return response()->json(['status'=>false,'message'=>'Token is required','data'=>[]]);
+           }
+       }
+       return $next($request);
     }
 }
