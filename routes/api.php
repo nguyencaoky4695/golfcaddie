@@ -26,5 +26,5 @@ Route::post("$lang/auth/logout", 'Auth\LoginController@logout');
 Route::resource("$lang/tournament",'Api\TournamentController');
 
 Route::group(['prefix'=>$lang, 'middleware' => 'jwt.auth'], function () {
-
+	
 });
