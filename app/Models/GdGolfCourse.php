@@ -6,5 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class GdGolfCourse extends Model
 {
-    //
+    protected $table = 'gd_golf_course';
+    protected $fillable = [
+        'title_vi',
+        'title_en',
+        'address_vi',
+        'address_en',
+        'lat',
+        'lng',
+        'province_id',
+
+    ];
 }
