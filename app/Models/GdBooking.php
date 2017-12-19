@@ -33,8 +33,20 @@ class GdBooking extends Model
 
     public function caddie()
     {
-        $this->belongsToMany(GdUser::class,'gd_booking_caddie','user_id','booking_id');
+        return $this->belongsToMany(GdUser::class,'gd_booking_caddie','booking_id','user_id');
     }
+
+    public function responseCaddie()
+    {
+        $result = [];
+        $caddie = $this->caddie;
+        foreach ($caddie as $item)
+        {
+            $result[] = $item->responseUser();
+        }
+        return $result;
+    }
+
 
     public function responseBooking($lang='vi')
     {
@@ -45,7 +57,7 @@ class GdBooking extends Model
             'start'=>$this->start,
             'end'=>$this->end,
             'qty_caddie'=>$this->qty_caddie,
-            'caddie'=>$this->caddie->responseUser(),
+            'caddie'=>$this->responseCaddie(),
             'description'=>$this->description,
             'price'=>$this->price,
             'status'=>$this->status,
