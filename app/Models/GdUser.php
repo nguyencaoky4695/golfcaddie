@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Reliese\Database\Eloquent\Model as Eloquent;
 class GdUser extends Authenticatable
 {
     use Notifiable;
@@ -53,7 +52,7 @@ class GdUser extends Authenticatable
                     'lat'=>(double)$this->lat,
                     'lng'=>(double)$this->lng,
                 ],
-                'address'=>$this->address
+                'name'=>$this->address
             ],
             'gender'=>$this->gender,
             'wallet'=>$this->wallet,

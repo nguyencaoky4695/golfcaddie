@@ -31,7 +31,6 @@ class ErrorCode extends Model
     public static $RequiredFromTo = 127;
     public static $RequiredCode = 128;
 
-
     public static $RequiredLatLngDistance = 130;
 
     public static $ExistMember = 150;
@@ -50,12 +49,17 @@ class ErrorCode extends Model
     public static $RequireClientCustomer = 210;
     public static $RequirePhone = 211;
     public static $RequireTitle = 212;
+    public static $RequireCourse_id = 213;
+    public static $RequireStartEnd = 214;
+    public static $RequireQualityCaddie = 215;
 
     public static $InvalidToken = 400;
     public static $Unauthorized = 401;
     public static $Forbidden = 403;
     public static $RequireToken = 405;
     public static $ExpiredToken = 406;
+    public static $InvalidFormat = 407;
+    public static $ImageLarge = 408;
 
     public static $LoginTimeout = 440;
 

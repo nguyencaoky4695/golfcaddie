@@ -15,16 +15,42 @@ class GdBooking extends Model
         'qty_caddie',
         'status',
         'description',
-
     ];
 
-    public function usre()
+    public function user()
     {
     	 return $this->belongsTo(GdUser::class,'user_id');
     }
     public function coursegolf()
     {
-        return $this->belongsTo(NgvOwner::class,'owner_id');
+        return $this->belongsTo(GdGolfCourse::class,'course_golf_id');
+    }
+
+    public function booking_caddie()
+    {
+        return $this->hasMany(GdBookingCaddie::class,'booking_id');
+    }
+
+    public function caddie()
+    {
+        $this->belongsToMany(GdUser::class,'gd_booking_caddie','user_id','booking_id');
+    }
+
+    public function responseBooking($lang='vi')
+    {
+        return [
+            'id'=>$this->id,
+            'golfer'=>$this->user->responseUser(),
+            'course'=>$this->coursegolf->responseCourse($lang),
+            'start'=>$this->start,
+            'end'=>$this->end,
+            'qty_caddie'=>$this->qty_caddie,
+            'caddie'=>$this->caddie->responseUser(),
+            'description'=>$this->description,
+            'price'=>$this->price,
+            'status'=>$this->status,
+            'created_at'=>$this->created_at
+        ];
     }
 
 }

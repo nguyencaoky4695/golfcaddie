@@ -24,13 +24,7 @@ class GdTournament extends Model
             'start'=>$this->start,
             'end'=>$this->end,
             'author'=>$this->user->responseUser(),
-            'address'=>[
-                'coordinates'=>[
-                    'lat'=>(double)$this->lat,
-                    'lng'=>(double)$this->lng,
-                ],
-                'address'=>$this->address
-            ],
+            'address'=>AddressObject($this->lat,$this->lng,$this->address),
             'created_at'=>$this->created_at
         ];
     }
