@@ -637,3 +637,14 @@ function ImageObject($width,$height,$short_link,$full_link)
         'full_link'=>$full_link
     ];
 }
+
+function AddressObject($lat,$lng,$name)
+{
+    return [
+        'coordinates'=>[
+            'lat'=>$lat,
+            'lng'=>$lng
+        ],
+        'name'=>$name
+    ];
+}
