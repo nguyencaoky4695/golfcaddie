@@ -19,12 +19,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 $lang = InitLanguage(2);
 
-Route::post("$lang/auth/register", 'Api\CaddieController@register');
-Route::post("$lang/auth/login", 'Api\CaddieController@login');
-Route::post("$lang/auth/logout", 'Api\CaddieController@logout');
+Route::post("$lang/auth/register", 'Auth\LoginController@register');
+Route::post("$lang/auth/login", 'Auth\LoginController@login');
+Route::post("$lang/auth/logout", 'Auth\LoginController@logout');
 
 Route::resource("$lang/tournament",'Api\TournamentController');
 
 Route::group(['prefix'=>$lang, 'middleware' => 'jwt.auth'], function () {
-
+	
 });
