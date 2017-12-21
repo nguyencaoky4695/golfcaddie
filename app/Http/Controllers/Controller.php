@@ -24,7 +24,11 @@ class Controller extends BaseController
         $this->middleware(function ($request, $next) {
             $u = session('user');
             if(!empty($u))
+            {
+                $u->badge = 0;
+                $u->save();
                 $this->user = $u;
+            }
             return $next($request);
         });
     }

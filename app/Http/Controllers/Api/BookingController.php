@@ -91,7 +91,11 @@ class BookingController extends Controller
             foreach ($available_caddies as $caddie)
             {
                 if($caddie->notification)
+                {
+                    $caddie->badge = ++$caddie->badge;
+                    $caddie->save();
                     PushNotification($caddie->device_token,$caddie->client,'New booking',"$user->name booked a new booking!",1,20);
+                }
             }
 
             return responseJSON($booking->responseBooking($this->lang));
@@ -133,7 +137,11 @@ class BookingController extends Controller
             {
                 $fee += $caddie->wallet;
                 if($caddie->notification)
+                {
+                    $caddie->badge = ++$caddie->badge;
+                    $caddie->save();
                     PushNotification($caddie->device_token,$caddie->client,'Pay booking',"$user->name paid the booking, you should prepare for the working!",1,22);
+                }
             }
 
             $booking->price = $fee;
@@ -162,7 +170,11 @@ class BookingController extends Controller
         $accepted_caddies = $booking->caddie;
         foreach ($accepted_caddies as $caddie)
             if($caddie->notification)
+            {
+                $caddie->badge = ++$caddie->badge;
+                $caddie->save();
                 PushNotification($caddie->device_token,$caddie->client,'Cancel booking',"$user->name canceled the booking!",1,21);
+            }
 
         if($booking->status == 4)
         {

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 use App\User;
 use App\Models\GdUser;
@@ -47,7 +48,6 @@ class LoginController extends Controller
             return responseJSON_EMPTY_OBJECT(false, "Thieu device_token hoặc client de push",ErrorCode::$RequiredDeviceTokenType);
 
         try {
-            
             $caddie->client = $client;
             $caddie->token = $token;
             $caddie->device_token =  $device_token;
@@ -55,50 +55,40 @@ class LoginController extends Controller
         } catch (Exception $ex) {
             return responseJSON_EMPTY_OBJECT(false, "device_token khong hop le",ErrorCode::$RequiredDeviceTokenType);
         }
-
          $result = $caddie->responseUser();
-
         return responseJSON($result, true, 'SUCCESS');
     }
 
     public  function logout(Request $request)
     {
+        $token = $request->header('token');
         try {
-            $user = JWTAuth::toUser($request->header('token'));
+            $user = JWTAuth::toUser($token);
             $user->token = '';
             $user->device_token = '';
             $user->notification = 0;
             $user->save();
+            JWTAuth::invalidate($token);
             return responseJSON_EMPTY_OBJECT();
         }catch (JWTException $e) {
-            return responseJSON_EMPTY_OBJECT(false,'Unauthorized',ErrorCode::$Unauthorized);
+            return responseJSON_EMPTY_OBJECT(false,'UNAUTHORIZED',ErrorCode::$Unauthorized);
         }
     }
 
     public function ChangePassword(Request $request)
     {
         try {
-            $uses = JWTAuth::toUser($request->token);
+            $user = JWTAuth::toUser($request->token);
+            if(!Hash::check($request->get('old_password'),$user->password))
+                return responseJSON_EMPTY_OBJECT(false,'Invalid old_password',ErrorCode::$InvalidOldPassword);
 
-            $old_password = trim($request['old_password']);
-            $pass = bcrypt($old_password);
-            if ($pass == $uses->password) {
-                $uses->password = bcrypt($request->get('new_password'));
-                if($uses->save()){
+            $user->password = bcrypt(trim($request->get('new_password')));
+            if($user->save())
+                return responseJSON_EMPTY_OBJECT();
 
-                    return responseJSON($uses);
-                }
-                else{
-                    return responseJSON([],false,'DATA_NOT_EXIT',405);
-                }
-            }
-            else{
-                dd($pass);
-            }
-            
-
+            return responseJSON_EMPTY_OBJECT(false,'Server error',ErrorCode::$ServerError);
         } catch (Exception $e) {
-            return responseJSON([],false,'Lỗi',305);
+            return responseJSON_EMPTY_OBJECT(false,'Invalid token',ErrorCode::$InvalidToken);
         }
     }
 

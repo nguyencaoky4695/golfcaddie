@@ -59,7 +59,7 @@ class GdUser extends Authenticatable
             'wallet'=>$this->wallet,
             'notification'=>$this->notification,
             'device_token'=>$this->device_token,
-            'client'=>$this->client,
+            'client'=>(int)$this->client,
             'type'=>$this->type,
             'token'=>$this->token
         ];

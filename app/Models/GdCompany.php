@@ -29,7 +29,7 @@ class GdCompany extends Model
         
     	$this->course= new GdGolfCourse();
         return [
-            'contact'=>$this->content,
+            'contact'=>json_decode($this->content),
             'province'=>$province_arr,
             'golf_course'=>$golfCourse_arr
         ];

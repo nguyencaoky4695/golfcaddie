@@ -47,7 +47,6 @@ class GdBooking extends Model
         return $result;
     }
 
-
     public function responseBooking($lang='vi')
     {
         return [
