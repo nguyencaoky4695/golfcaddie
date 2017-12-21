@@ -95,72 +95,12 @@ class LoginController extends Controller
         return responseJSON($result, true, 'SUCCESS');
     }
 
-    public function register(Request $request)
-    {
-
-        $rules = [
-           
-            'email' => 'required|email|unique:gd_user,email',
-            'password' => 'required',
-            'name' => 'required'
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            $error = $validator->errors()->first();
-            return responseJSON([], false, $error, 300);
-        }
-
-        $create = $request->all();
-
-
-        $device_token = $request->get('device_token');
-        $device_token = $request->get('device_token');
-        
-        $create['address'] = $request->get('address');
-        $create['notification'] = 1;
-        $create['type'] = 1;
-        $pass = trim($request['password']);
-        $pass = empty($pass) ? trim($request['email']) : $pass;
-        
-        $create['password'] = bcrypt($pass);
-
-        if ($request->hasFile('avatar')) {
-            $rules = array(
-                'avatar' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
-            );
-            $validator = Validator::make($request->all(), $rules);
-            if ($validator->fails()) {
-                $message = $validator->errors()->first();
-                return responseJSON([], false, $message);
-            }
-
-            $file = $request->avatar;
-            $filename = md5(time());
-            Cloudder::upload($file, 'caddie_avatar/' . $filename);
-            $image = Cloudder::getResult();
-            $create['avatar'] = $image['url'];
-        }
-        
-        $user = $this->caddie->create($create);
-
-        $caddie = GdUser::find($user->id);
-        $token = JWTAuth::fromUser($caddie);
-        
-        $caddie->token = $token;
-
-        
-        $caddie->save();
-
-        $result = $caddie;
-
-        return responseJSON($result,true,'SUCCESS');
-    }
+   
 
     public  function logout(Request $request)
     {
-        $id = $request->get('UserId');
-        GdUser::where('id',$id)->update(['device_token'=>'']);
+        $id = $request->get('id');
+        GdUser::where('id',$id)->update(['device_token' => '', 'token' => '']);
         return responseJSON();
     }
 
@@ -178,16 +118,17 @@ class LoginController extends Controller
                     return responseJSON($uses);
                 }
                 else{
-                    return responseJSON([],false,'DATA_NOT_EXIT',405);
+                   return responseJSON_EMPTY_OBJECT(false,'Password not save',ErrorCode::$ServerError);
                 }
             }
             else{
-                dd($pass);
+
+                 return responseJSON_EMPTY_OBJECT(false,'DATA_NOT_EXIT',ErrorCode::$RequireToken);
             }
             
 
         } catch (Exception $e) {
-            return responseJSON([],false,'Lỗi',305);
+             return responseJSON_EMPTY_OBJECT(false,'Server error',ErrorCode::$ServerError);
         }
     }
 
