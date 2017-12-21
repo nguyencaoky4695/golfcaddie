@@ -18,7 +18,7 @@ class ErrorCode extends Model
     public static $MinDescription = 109;
 
     public static $InvalidAccount = 110;
-    // public static $ = 111;
+    
 
     public static $InvalidRePassword = 115;
     public static $InvalidOldPassword = 116;
@@ -66,4 +66,9 @@ class ErrorCode extends Model
     public static $ServerError = 500;
     public static $Error = 501;
     public static $BadGateway = 502;
+
+    public static $caddienotaccept = 600;
+    public static $notificationnotfound= 601;
+
+
 }

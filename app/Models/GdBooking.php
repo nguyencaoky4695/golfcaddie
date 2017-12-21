@@ -19,7 +19,7 @@ class GdBooking extends Model
 
     public function user()
     {
-    	 return $this->belongsTo(GdUser::class,'user_id');
+         return $this->belongsTo(GdUser::class,'user_id');
     }
     public function coursegolf()
     {

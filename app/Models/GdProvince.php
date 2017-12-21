@@ -11,6 +11,7 @@ class GdProvince extends Model
 
     public function responseProvince($lang='vi')
     {
+    	
         return [
             'id'=>$this->id,
             'name'=>$this["name_$lang"]
