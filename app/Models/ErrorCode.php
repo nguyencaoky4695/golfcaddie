@@ -63,6 +63,8 @@ class ErrorCode extends Model
 
     public static $LoginTimeout = 440;
 
+    public static $NotExistData = 450;
+
     public static $ServerError = 500;
     public static $Error = 501;
     public static $BadGateway = 502;

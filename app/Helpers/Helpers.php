@@ -19,6 +19,15 @@
         ];
     }
 
+    function responseJSON_NO_DATA($success=true,$msg='SUCCESS',$code=200)
+    {
+        return [
+            'status'=>$success,
+            'message'=>$msg,
+            'code'=>$code
+        ];
+    }
+
     function InitLanguage($index=2)
     {
         $lang = Request::segment($index);
@@ -140,81 +149,32 @@
         ];
     }
 
-
-function GGPushRequest($body)
+function GGPushRequest($fields)
 {
-    $endpoint = env('GG_ENDPOINT','https://fcm.googleapis.com/fcm/send');
-    $request = new \Http_Request2($endpoint);
+    $endpoint = env('GG_ENDPOINT', 'https://fcm.googleapis.com/fcm/send');
+    $gg_api_access_key = env('GG_API_ACCESS_KEY','AAAAe-8hPyE:APA91bEOoRk9daVnye2b1XqSskvLSBBGEnhxsTBjAJnltq8Me2yqOfEIEq52lx8Lav3jFJBtnQ356fgflHZWHZLjWwYyoJmDAoVmTP6UGy-uCx1vefgGCZAjFb6AVWHNOi9fSgey9iJW');
 
     $headers = array(
         'Content-Type' => 'application/json',
-        'Authorization' => 'key=' . env('GG_API_ACCESS_KEY',''),
+        'Authorization' => "key=$gg_api_access_key",
     );
 
-    $request->setHeader($headers);
 
-    $request->setMethod(\HTTP_Request2::METHOD_POST);
+    $client = new \GuzzleHttp\Client([
+        'verify' => false,
+        'headers' => $headers
+    ]);
 
-    $request->setBody(json_encode($body));
-
-    try
-    {
-        $response = $request->send();
-        return $response->getBody();
-    }
-    catch (\HttpException $ex)
-    {
-        return null;
-    }
+    $response = $client->post($endpoint,
+        ['body' => json_encode($fields)]
+    );
+    return $response->getBody()->getContents();
 }
-function PushNotification($deviceToken=[],$title="Tiêu đề",$body="Nội dung",$badge=2,$status=88,$color="#990000")
+
+function PushNotification($deviceToken = '',$device_type=1, $title = "Tiêu đề", $body = "Nội dung", $badge = 1, $status = 88, $color = "#990000 ", $options = [])
 {
+    $msg_name = $device_type ?  'data' : 'notification';
     $msg =
-        [
-            'title'	=> $title,
-            'body' 	=> $body,
-            'badge'=>$badge,
-            'sound'=>'default',
-            'status'=>$status,
-            'color'=> $color
-        ];
-    $fields =
-        [
-            'registration_ids'		=> $deviceToken,
-            'notification'	=> $msg
-        ];
-
-    $result = GGPushRequest($fields);
-    return $result;
-}
-
-
-function PushNotificationIOS($deviceToken = [],$log_args=[] , $badge, $status, $color = "#990000", $options = "")
-{
-    $msg =
-        [
-            'body_loc_key' => $status,
-            'body_loc_args' => $log_args,
-            'badge' => $badge,
-            'priority' => 'high',
-            'sound' => 'default',
-            'status' => $status,
-            'color' => $color,
-            'options' => (string)$options
-        ];
-    $fields =
-        [
-            'registration_ids' => $deviceToken,
-            'notification' => $msg
-        ];
-
-    $result = GGPushRequest($fields);
-    return $result;
-}
-
-function PushNotificationAndroid($deviceToken = [],$title,$body, $badge, $status, $color = "#990000", $options = [])
-{
-   $msg =
         [
             'title' => $title,
             'body' => $body,
@@ -222,17 +182,19 @@ function PushNotificationAndroid($deviceToken = [],$title,$body, $badge, $status
             'sound' => 'default',
             'status' => $status,
             'color' => $color,
-            'options' => $options,
+            'options' => $options
         ];
     $fields =
         [
-            'registration_ids' => $deviceToken,
-            'data' => $msg
+            'to' => $deviceToken,
+            'priority' => 'high',
+            $msg_name => $msg
         ];
 
     $result = GGPushRequest($fields);
     return $result;
 }
+
 function GEONear($table,$lat,$lng,$max_distance=10,$limit=100,$select="*")
 {
     $circle_radius=3959;
@@ -354,10 +316,7 @@ function bill_method($mothod)
 function serializeDate($date)
 {
     $date=date_create($date);
-    return $date->format("Y-m-d"). 'T' .$date->format("H:i:s.z") ."Z";
-
-    //return $date->format(DateTime::ISO8601);
-
+    return $date->format("Y-m-d H:i:s");
 }
 
 function subDate($date1,$date2)
@@ -648,3 +607,20 @@ function AddressObject($lat,$lng,$name)
         'name'=>$name
     ];
 }
+
+function DateTimeObject($date)
+{
+    return \Carbon\Carbon::parse($date)->format('Y-m-d H:i:s');
+}
+
+function calculatePenalty($pay_date,$start,$price)
+{
+    $mid_date = (strtotime($pay_date) + strtotime($start))/2;
+    $mid_date = round($mid_date);
+    $mid_date = date('Y-m-d H:i:s', $mid_date);
+    if(date('Y-m-d H:i:s') <= $mid_date)
+        return $price * 40/100;
+    return $price*80/100;
+}
+
+

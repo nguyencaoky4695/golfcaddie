@@ -54,14 +54,14 @@ class GdBooking extends Model
             'id'=>$this->id,
             'golfer'=>$this->user->responseUser(),
             'course'=>$this->coursegolf->responseCourse($lang),
-            'start'=>$this->start,
-            'end'=>$this->end,
+            'start'=>DateTimeObject($this->start),
+            'end'=>DateTimeObject($this->end),
             'qty_caddie'=>$this->qty_caddie,
             'caddie'=>$this->responseCaddie(),
             'description'=>$this->description,
             'price'=>$this->price,
             'status'=>$this->status,
-            'created_at'=>$this->created_at
+            'created_at'=>DateTimeObject($this->created_at)
         ];
     }
 

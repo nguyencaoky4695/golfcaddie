@@ -1,0 +1,34 @@
+/*Cho trang client*/
+table .line {
+    position: relative;
+    height: 32px;
+    width: 100%;
+    float: left;
+    margin-top: -22px;
+    margin-left: 50%;
+}
+table .child-last .line{
+    height: 12px;
+}
+
+table .line.level1 .horz, table .line.level1 .vert {
+    /*background-color: #FF2A02;*/
+    border-style:dashed;
+    border-color: red;
+    border-width: 0px;
+}
+table .line .vert {
+    /*width: 1px;*/
+    border-left-width: 1px !important;
+    height: 100%;
+}
+table .child-last .line .horz {
+    position: absolute;
+    width: 50%;
+    /*height: 1px;*/
+    border-bottom-width: 1px !important;
+}
+td>n,td>b{
+    cursor: context-menu;
+}
+/*End Cho trang client*/

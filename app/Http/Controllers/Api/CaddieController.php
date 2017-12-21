@@ -17,14 +17,7 @@ class CaddieController extends Controller
     
      public function __construct(Request $request)
     {
-        
-        $actionMethod = $request->route()->getActionMethod();
-        if (in_array($actionMethod)) {
-            \Config::set('auth.providers.users.model', GdUser::class);
-            \Config::set('jwt.user', GdUser::class);
-        }
 
-       
     }
    
 

@@ -54,6 +54,7 @@ class GdUser extends Authenticatable
                 ],
                 'name'=>$this->address
             ],
+            'birthday'=>DateTimeObject($this->birthday),
             'gender'=>$this->gender,
             'wallet'=>$this->wallet,
             'notification'=>$this->notification,

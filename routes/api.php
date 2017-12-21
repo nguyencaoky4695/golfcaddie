@@ -19,12 +19,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 $lang = InitLanguage(2);
 
-Route::post("$lang/auth/register", 'Auth\LoginController@register');
+Route::post("$lang/golfer/register", 'Api\GolferController@register');
 Route::post("$lang/auth/login", 'Auth\LoginController@login');
 Route::post("$lang/auth/logout", 'Auth\LoginController@logout');
 
-Route::resource("$lang/tournament",'Api\TournamentController');
-
 Route::group(['prefix'=>$lang, 'middleware' => 'jwt.auth'], function () {
-	
+    Route::resource("tournament",'Api\TournamentController');
+    Route::resource("booking",'Api\BookingController');
+    Route::post('booking/{id}/pay','Api\BookingController@payBooking');
+    Route::post('booking/{id}/cancel','Api\BookingController@cancelBooking');
+
+    Route::group(['prefix'=>'golfer'],function (){
+        Route::post('update-profile','Api\GolferController@updateProfile');
+    });
 });

@@ -9,7 +9,9 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "tymon/jwt-auth": "^0.5.12",
-        "jrm2k6/cloudder": "0.4.*"
+        "jrm2k6/cloudder": "0.4.*",
+        "guzzlehttp/guzzle": "~6.0",
+        "laravelcollective/html": "^5.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
