@@ -32,4 +32,5 @@ class GdGolfCourse extends Model
             'province'=>$this->province->responseProvince($lang)
         ];
     }
+    
 }
